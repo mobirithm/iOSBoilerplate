@@ -114,16 +114,45 @@ struct SignInView: View {
                             let fullName = appleIDCredential.fullName
                             let idToken = appleIDCredential.identityToken.flatMap { String(data: $0, encoding: .utf8) }
 
-                            // Create user object
-                            let displayName = [fullName?.givenName, fullName?.familyName]
-                                .compactMap { $0 }
-                                .joined(separator: " ")
+                            print("🍎 Apple Sign-In: Received credentials:")
+                            print("   - User ID: \(userID)")
+                            print("   - Email from Apple: \(email ?? "nil")")
+                            print(
+                                "   - Full Name from Apple: \(fullName?.givenName ?? "nil") \(fullName?.familyName ?? "nil")"
+                            )
+
+                            // Check if we already have stored email/full name
+                            let storedEmail = try? authManager.keychainManager
+                                .loadString(for: KeychainManager.Keys.userEmail)
+                            let storedFullName = try? authManager.keychainManager
+                                .loadString(for: KeychainManager.Keys.userFullName)
+
+                            print("🔐 Stored credentials:")
+                            print("   - Stored Email: \(storedEmail ?? "nil")")
+                            print("   - Stored Full Name: \(storedFullName ?? "nil")")
+
+                            // Use Apple's values if provided, otherwise use stored values
+                            let finalEmail = email ?? storedEmail
+                            let finalFullName: String?
+
+                            if let appleFullName = fullName {
+                                let displayName = [appleFullName.givenName, appleFullName.familyName]
+                                    .compactMap { $0 }
+                                    .joined(separator: " ")
+                                finalFullName = displayName.isEmpty ? storedFullName : displayName
+                            } else {
+                                finalFullName = storedFullName
+                            }
+
+                            print("🔐 Final user data:")
+                            print("   - Final Email: \(finalEmail ?? "nil")")
+                            print("   - Final Full Name: \(finalFullName ?? "nil")")
 
                             let user = User(
                                 id: userID,
-                                email: email,
-                                fullName: displayName.isEmpty ? nil : displayName,
-                                isEmailVerified: email != nil
+                                email: finalEmail,
+                                fullName: finalFullName,
+                                isEmailVerified: finalEmail != nil
                             )
 
                             // Save to keychain and update state
@@ -135,15 +164,15 @@ struct SignInView: View {
                                     string: userID,
                                     for: KeychainManager.Keys.appleUserID
                                 )
-                                if let email = email {
+                                if let emailToSave = finalEmail {
                                     try authManager.keychainManager.save(
-                                        string: email,
+                                        string: emailToSave,
                                         for: KeychainManager.Keys.userEmail
                                     )
                                 }
-                                if let fullName = displayName.isEmpty ? nil : displayName {
+                                if let fullNameToSave = finalFullName {
                                     try authManager.keychainManager.save(
-                                        string: fullName,
+                                        string: fullNameToSave,
                                         for: KeychainManager.Keys.userFullName
                                     )
                                 }
@@ -153,6 +182,7 @@ struct SignInView: View {
                                         for: KeychainManager.Keys.appleIDToken
                                     )
                                 }
+                                print("✅ Successfully saved credentials to keychain")
                             } catch {
                                 print("❌ Failed to save credentials to keychain: \(error)")
                             }

@@ -107,7 +107,10 @@ public class AuthManager: NSObject, ObservableObject {
             await MainActor.run {
                 do {
                     // Check if we have stored credentials
-                    if keychainManager.exists(for: KeychainManager.Keys.appleUserID) {
+                    let hasUserID = keychainManager.exists(for: KeychainManager.Keys.appleUserID)
+                    print("🔐 AuthManager: Has stored Apple User ID: \(hasUserID)")
+
+                    if hasUserID {
                         print("🔐 AuthManager: Found stored Apple User ID in keychain")
                         let userID = try keychainManager.loadString(for: KeychainManager.Keys.appleUserID)
                         let email = try? keychainManager.loadString(for: KeychainManager.Keys.userEmail)
