@@ -58,6 +58,19 @@ struct ContentView: View {
 
                 // Navigation Buttons
                 VStack(spacing: DesignTokens.Spacing.md) {
+                    NavigationLink(destination: ComponentGallery()) {
+                        HStack {
+                            Image(systemName: "square.grid.3x3")
+                            Text("Component Gallery")
+                                .font(DesignTokens.Typography.buttonTitle)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(DesignTokens.Spacing.buttonPadding)
+                        .background(DesignTokens.Colors.primary)
+                        .foregroundColor(DesignTokens.Colors.onPrimary)
+                        .cornerRadius(DesignTokens.CornerRadius.button)
+                    }
+
                     NavigationLink(destination: DesignTokensDemo()) {
                         HStack {
                             Image(systemName: "paintpalette")
@@ -66,8 +79,8 @@ struct ContentView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(DesignTokens.Spacing.buttonPadding)
-                        .background(DesignTokens.Colors.primary)
-                        .foregroundColor(DesignTokens.Colors.onPrimary)
+                        .background(DesignTokens.Colors.secondary)
+                        .foregroundColor(DesignTokens.Colors.onSecondary)
                         .cornerRadius(DesignTokens.CornerRadius.button)
                     }
 
