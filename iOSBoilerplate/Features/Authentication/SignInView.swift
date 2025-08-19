@@ -128,6 +128,34 @@ struct SignInView: View {
 
                             // Save to keychain and update state
                             authManager.setSignedInState(user: user)
+
+                            // Save credentials to keychain for persistence
+                            do {
+                                try authManager.keychainManager.save(
+                                    string: userID,
+                                    for: KeychainManager.Keys.appleUserID
+                                )
+                                if let email = email {
+                                    try authManager.keychainManager.save(
+                                        string: email,
+                                        for: KeychainManager.Keys.userEmail
+                                    )
+                                }
+                                if let fullName = displayName.isEmpty ? nil : displayName {
+                                    try authManager.keychainManager.save(
+                                        string: fullName,
+                                        for: KeychainManager.Keys.userFullName
+                                    )
+                                }
+                                if let idToken = idToken {
+                                    try authManager.keychainManager.save(
+                                        string: idToken,
+                                        for: KeychainManager.Keys.appleIDToken
+                                    )
+                                }
+                            } catch {
+                                print("❌ Failed to save credentials to keychain: \(error)")
+                            }
                         }
                     case let .failure(error):
                         if let authError = error as? ASAuthorizationError {
