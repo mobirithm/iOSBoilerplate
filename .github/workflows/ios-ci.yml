@@ -1,0 +1,162 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode Version
+      run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+      
+    - name: Show Xcode Version
+      run: xcodebuild -version
+      
+    - name: Show Available Simulators
+      run: xcrun simctl list devices available
+      
+    - name: Install Dependencies
+      run: |
+        # Install SwiftLint
+        brew install swiftlint
+        
+        # Install SwiftFormat  
+        brew install swiftformat
+        
+        # Install XcodeGen
+        brew install xcodegen
+      
+    - name: Generate Xcode Project
+      run: xcodegen generate
+      
+    - name: Cache Derived Data
+      uses: actions/cache@v4
+      with:
+        path: ~/Library/Developer/Xcode/DerivedData
+        key: ${{ runner.os }}-deriveddata-${{ hashFiles('**/project.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-deriveddata-
+    
+    - name: Run SwiftLint
+      run: |
+        swiftlint lint --reporter github-actions-logging
+      continue-on-error: false
+      
+    - name: Run SwiftFormat Check
+      run: |
+        swiftformat --lint . --reporter github-actions-logging
+      continue-on-error: false
+      
+    - name: Build for Testing
+      run: |
+        xcodebuild clean build-for-testing \
+          -project iOSBoilerplate.xcodeproj \
+          -scheme iOSBoilerplate \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+          -configuration Debug \
+          -derivedDataPath ~/Library/Developer/Xcode/DerivedData \
+          CODE_SIGNING_ALLOWED=NO \
+          ONLY_ACTIVE_ARCH=YES
+          
+    - name: Run Unit Tests
+      run: |
+        xcodebuild test-without-building \
+          -project iOSBoilerplate.xcodeproj \
+          -scheme iOSBoilerplate \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+          -configuration Debug \
+          -derivedDataPath ~/Library/Developer/Xcode/DerivedData \
+          CODE_SIGNING_ALLOWED=NO \
+          ONLY_ACTIVE_ARCH=YES
+      continue-on-error: false
+      
+    - name: Generate Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()
+      with:
+        name: iOS Tests
+        path: ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
+        reporter: java-junit
+        fail-on-error: true
+
+  code-coverage:
+    name: Code Coverage
+    runs-on: macos-latest
+    needs: build-and-test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode Version
+      run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+      
+    - name: Install Dependencies
+      run: |
+        brew install xcodegen
+        
+    - name: Generate Xcode Project
+      run: xcodegen generate
+      
+    - name: Run Tests with Coverage
+      run: |
+        xcodebuild test \
+          -project iOSBoilerplate.xcodeproj \
+          -scheme iOSBoilerplate \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+          -enableCodeCoverage YES \
+          -derivedDataPath ~/Library/Developer/Xcode/DerivedData \
+          CODE_SIGNING_ALLOWED=NO
+          
+    - name: Generate Coverage Report
+      run: |
+        xcrun xccov view --report --json ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult > coverage.json
+        
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage.json
+        flags: ios
+        name: ios-coverage
+        fail_ci_if_error: false
+
+  security-scan:
+    name: Security Scan
+    runs-on: macos-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Run Security Scan
+      run: |
+        # Check for common security issues
+        echo "🔍 Scanning for security issues..."
+        
+        # Check for hardcoded secrets
+        if grep -r -i "password\|secret\|key\|token" --include="*.swift" iOSBoilerplate/ | grep -v "// swiftlint" | grep -v "func\|var\|let\|struct\|class\|enum"; then
+          echo "❌ Potential hardcoded secrets found"
+          exit 1
+        fi
+        
+        # Check for insecure network calls
+        if grep -r "http://" --include="*.swift" iOSBoilerplate/; then
+          echo "❌ Insecure HTTP URLs found - use HTTPS"
+          exit 1
+        fi
+        
+        echo "✅ Security scan passed"

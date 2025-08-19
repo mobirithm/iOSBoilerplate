@@ -1,5 +1,11 @@
 # iOS Boilerplate (SwiftUI)
 
+[![iOS CI](https://github.com/mobirithm/iOSBoilerplate/actions/workflows/ios-ci.yml/badge.svg)](https://github.com/mobirithm/iOSBoilerplate/actions/workflows/ios-ci.yml)
+[![Swift Version](https://img.shields.io/badge/Swift-5.0+-orange.svg)](https://swift.org)
+[![iOS Version](https://img.shields.io/badge/iOS-16.0+-blue.svg)](https://developer.apple.com/ios/)
+[![License](https://img.shields.io/badge/License-Proprietary-red.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 A production-ready iOS boilerplate built in SwiftUI for rapid consumer app development. This template includes authentication, monetization, analytics, notifications, and internationalization features out of the box.
 
 ## 🎯 Project Goals

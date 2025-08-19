@@ -1,0 +1,68 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
+
+jobs:
+  release:
+    name: Create Release Build
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      
+    - name: Select Xcode Version
+      run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+      
+    - name: Install Dependencies
+      run: |
+        brew install xcodegen
+        
+    - name: Generate Xcode Project
+      run: xcodegen generate
+      
+    - name: Build for Release
+      run: |
+        xcodebuild archive \
+          -project iOSBoilerplate.xcodeproj \
+          -scheme iOSBoilerplate \
+          -destination 'generic/platform=iOS' \
+          -configuration Release \
+          -archivePath build/iOSBoilerplate.xcarchive \
+          CODE_SIGNING_ALLOWED=NO
+          
+    - name: Create GitHub Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: iOS Boilerplate ${{ github.ref }}
+        draft: false
+        prerelease: false
+        body: |
+          ## iOS Boilerplate Release
+          
+          ### What's New
+          - Production-ready SwiftUI boilerplate
+          - Authentication, monetization, and analytics ready
+          - Complete CI/CD pipeline
+          
+          ### Installation
+          ```bash
+          git clone https://github.com/mobirithm/iOSBoilerplate.git
+          cd iOSBoilerplate
+          xcodegen generate
+          open iOSBoilerplate.xcodeproj
+          ```
+          
+          ### Requirements
+          - Xcode 15.0+
+          - iOS 16.0+
+          - Swift 5.0+

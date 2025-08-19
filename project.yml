@@ -56,15 +56,30 @@ targets:
       DEVELOPMENT_ASSET_PATHS: "\"iOSBoilerplate/Preview Content\""
       GENERATE_INFOPLIST_FILE: true
 
+  iOSBoilerplateTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - iOSBoilerplateTests.swift
+    dependencies:
+      - target: iOSBoilerplate
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.mobirithm.iOSBoilerplate.tests
+      GENERATE_INFOPLIST_FILE: true
+
 schemes:
   iOSBoilerplate:
     build:
       targets:
         iOSBoilerplate: all
+        iOSBoilerplateTests: [test]
     run:
       config: Debug
     test:
       config: Debug
+      targets:
+        - iOSBoilerplateTests
     profile:
       config: Release
     analyze:
