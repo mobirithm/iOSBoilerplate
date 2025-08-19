@@ -14,37 +14,37 @@ public enum DesignTokens {
     // MARK: - Colors
     public enum Colors {
         // MARK: - Primary Colors
-        public static let primary = Color("Primary")
-        public static let primaryVariant = Color("PrimaryVariant")
-        public static let secondary = Color("Secondary")
-        public static let secondaryVariant = Color("SecondaryVariant")
+        public static let primary = Color("Colors/Primary")
+        public static let primaryVariant = Color("Colors/PrimaryVariant")
+        public static let secondary = Color("Colors/Secondary")
+        public static let secondaryVariant = Color("Colors/SecondaryVariant")
 
         // MARK: - Background Colors
-        public static let background = Color("Background")
-        public static let surface = Color("Surface")
-        public static let surfaceVariant = Color("SurfaceVariant")
+        public static let background = Color("Colors/Background")
+        public static let surface = Color("Colors/Surface")
+        public static let surfaceVariant = Color("Colors/SurfaceVariant")
 
         // MARK: - Content Colors
-        public static let onPrimary = Color("OnPrimary")
-        public static let onSecondary = Color("OnSecondary")
-        public static let onBackground = Color("OnBackground")
-        public static let onSurface = Color("OnSurface")
+        public static let onPrimary = Color("Colors/OnPrimary")
+        public static let onSecondary = Color("Colors/OnSecondary")
+        public static let onBackground = Color("Colors/OnBackground")
+        public static let onSurface = Color("Colors/OnSurface")
 
         // MARK: - Semantic Colors
-        public static let success = Color("Success")
-        public static let warning = Color("Warning")
-        public static let error = Color("Error")
-        public static let info = Color("Info")
+        public static let success = Color("Colors/Success")
+        public static let warning = Color("Colors/Warning")
+        public static let error = Color("Colors/Error")
+        public static let info = Color("Colors/Info")
 
         // MARK: - Text Colors
-        public static let textPrimary = Color("TextPrimary")
-        public static let textSecondary = Color("TextSecondary")
-        public static let textTertiary = Color("TextTertiary")
-        public static let textDisabled = Color("TextDisabled")
+        public static let textPrimary = Color("Colors/TextPrimary")
+        public static let textSecondary = Color("Colors/TextSecondary")
+        public static let textTertiary = Color("Colors/TextTertiary")
+        public static let textDisabled = Color("Colors/TextDisabled")
 
         // MARK: - Border Colors
-        public static let border = Color("Border")
-        public static let borderVariant = Color("BorderVariant")
+        public static let border = Color("Colors/Border")
+        public static let borderVariant = Color("Colors/BorderVariant")
 
         // MARK: - System Colors (fallbacks)
         public static let systemBackground = Color(.systemBackground)
