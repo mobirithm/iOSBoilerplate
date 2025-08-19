@@ -142,7 +142,7 @@ public final class RevenueCatManager: ObservableObject {
             isLoading = true
             print("💰 RevenueCat: Calling Purchases.shared.purchase...")
 
-            Purchases.shared.purchase(package: pkg) { [weak self] _, _, _, error in
+            Purchases.shared.purchase(package: pkg) { [weak self] _, _, error, userCancelled in
                 guard let self else {
                     print("❌ RevenueCat: Self is nil in purchase callback")
                     return
@@ -153,6 +153,8 @@ public final class RevenueCatManager: ObservableObject {
 
                 if let error = error {
                     print("❌ RevenueCat: Purchase error: \(error.localizedDescription)")
+                } else if userCancelled {
+                    print("⚠️ RevenueCat: Purchase was cancelled by user")
                 } else {
                     print("✅ RevenueCat: Purchase successful")
                 }
