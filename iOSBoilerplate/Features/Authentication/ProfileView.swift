@@ -11,6 +11,8 @@ struct ProfileView: View {
     @EnvironmentObject private var authManager: AuthManager
     @EnvironmentObject private var themeManager: ThemeManager
     @EnvironmentObject private var localizationManager: LocalizationManager
+    @EnvironmentObject private var revenueCat: RevenueCatManager
+    @State private var showPaywall = false
     @State private var showSignOutAlert = false
     @State private var showDeleteAccountAlert = false
 
@@ -23,6 +25,9 @@ struct ProfileView: View {
 
                     // MARK: - User Information
                     userInformationSection
+
+                    // MARK: - Premium Gate
+                    premiumGate
 
                     // MARK: - Account Actions
                     accountActionsSection
@@ -37,27 +42,27 @@ struct ProfileView: View {
             .background(DesignTokens.Colors.background)
             .navigationTitle("nav.profile".localized)
             .navigationBarTitleDisplayMode(.large)
-        }
-        .rtlAware()
-        .alert("auth.signOut.confirm".localized, isPresented: $showSignOutAlert) {
-            Button("nav.cancel".localized, role: .cancel) {
-                showSignOutAlert = false
+            .sheet(isPresented: $showPaywall) { paywallView }
+            .alert("auth.signOut.confirm".localized, isPresented: $showSignOutAlert) {
+                Button("nav.cancel".localized, role: .cancel) {
+                    showSignOutAlert = false
+                }
+                Button("auth.signOut".localized, role: .destructive) {
+                    authManager.signOut()
+                }
+            } message: {
+                Text("auth.signOut.message".localized)
             }
-            Button("auth.signOut".localized, role: .destructive) {
-                authManager.signOut()
+            .alert("auth.deleteAccount.confirm".localized, isPresented: $showDeleteAccountAlert) {
+                Button("nav.cancel".localized, role: .cancel) {
+                    showDeleteAccountAlert = false
+                }
+                Button("auth.deleteAccount".localized, role: .destructive) {
+                    authManager.deleteAccount()
+                }
+            } message: {
+                Text("auth.deleteAccount.message".localized)
             }
-        } message: {
-            Text("auth.signOut.message".localized)
-        }
-        .alert("auth.deleteAccount.confirm".localized, isPresented: $showDeleteAccountAlert) {
-            Button("nav.cancel".localized, role: .cancel) {
-                showDeleteAccountAlert = false
-            }
-            Button("auth.deleteAccount".localized, role: .destructive) {
-                authManager.deleteAccount()
-            }
-        } message: {
-            Text("auth.deleteAccount.message".localized)
         }
     }
 
@@ -170,6 +175,74 @@ struct ProfileView: View {
                     }
                 }
             }
+        }
+    }
+
+    // MARK: - Premium Gate
+    private var premiumGate: some View {
+        MBCard(style: .elevated) {
+            VStack(spacing: DesignTokens.Spacing.md) {
+                HStack {
+                    Image(systemName: "star.fill")
+                        .foregroundColor(DesignTokens.Colors.warning)
+                    Text("Premium Features")
+                        .font(DesignTokens.Typography.headline)
+                    Spacer()
+                    if revenueCat.isPro {
+                        Text("Active")
+                            .foregroundColor(DesignTokens.Colors.success)
+                    } else {
+                        Text("Locked")
+                            .foregroundColor(DesignTokens.Colors.error)
+                    }
+                }
+
+                if revenueCat.isPro {
+                    Text("You have access to premium content.")
+                        .foregroundColor(DesignTokens.Colors.textSecondary)
+                } else {
+                    VStack(spacing: DesignTokens.Spacing.sm) {
+                        MBButton(title: "Unlock Premium", style: .primary, size: .large) {
+                            showPaywall = true
+                        }
+                        MBButton(title: "Restore Purchases", style: .tertiary, size: .medium) {
+                            revenueCat.restore()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var paywallView: some View {
+        NavigationView {
+            VStack(spacing: DesignTokens.Spacing.md) {
+                List(revenueCat.availablePackages) { pkg in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            Text(pkg.title)
+                            Text(pkg.price).foregroundColor(DesignTokens.Colors.textSecondary)
+                        }
+                        Spacer()
+                        MBButton(title: "Buy", style: .primary, size: .small) {
+                            revenueCat.purchase(packageId: pkg.id) { success in
+                                if success { showPaywall = false }
+                            }
+                        }
+                    }
+                }
+                .listStyle(.insetGrouped)
+
+                MBButton(title: "Close", style: .tertiary, size: .large) { showPaywall = false }
+            }
+            .navigationTitle("Upgrade")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if revenueCat.isLoading { ProgressView() }
+                }
+            }
+            .onAppear { revenueCat.refresh() }
+            .padding()
         }
     }
 

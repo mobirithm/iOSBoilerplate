@@ -15,6 +15,12 @@ struct IOSBoilerplateApp: App {
                 .withThemeManager()
                 .withLocalizationManager()
                 .withAuthManager()
+                .withRevenueCatManager()
+                .onAppear {
+                    #if canImport(RevenueCat)
+                        RevenueCatManager.shared.configure()
+                    #endif
+                }
         }
     }
 }
