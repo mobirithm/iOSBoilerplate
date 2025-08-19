@@ -24,6 +24,27 @@ targets:
     resources:
       - iOSBoilerplate/Resources/**
       - iOSBoilerplate/Preview Content/**
+    prebuildScripts:
+      - name: SwiftLint
+        script: |
+          if which swiftlint >/dev/null; then
+            swiftlint
+          else
+            echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
+          fi
+        inputFiles:
+          - .swiftlint.yml
+        outputFiles:
+          - $DERIVED_FILE_DIR/swiftlint-output.txt
+      - name: SwiftFormat
+        script: |
+          if which swiftformat >/dev/null; then
+            swiftformat --lint .
+          else
+            echo "warning: SwiftFormat not installed, download from https://github.com/nicklockwood/SwiftFormat"
+          fi
+        inputFiles:
+          - .swiftformat
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.mobirithm.iOSBoilerplate
       INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true

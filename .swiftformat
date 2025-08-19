@@ -1,0 +1,130 @@
+# SwiftFormat Configuration for iOS Boilerplate
+# Consistent code formatting for mobile development
+
+# Version (require minimum version)
+--swiftversion 5.0
+
+# Basic formatting
+--indent 4
+--indentcase false
+--trimwhitespace always
+--commas always
+--decimalgrouping 3,6
+--binarygrouping 4,8
+--octalgrouping 4,8
+--hexgrouping 4,8
+--fractiongrouping disabled
+--exponentgrouping disabled
+
+# Import organization
+--importgrouping testable-bottom
+
+# Spacing and alignment
+--ifdef indent
+--xcodeindentation enabled
+--smarttabs enabled
+--tabwidth unspecified
+--maxwidth 120
+--assetliterals visual-width
+
+# Wrapping
+--wraparguments before-first
+--wrapparameters before-first
+--wrapcollections before-first
+--wrapconditions before-first
+--wrapreturntype if-multiline
+--wraptypealiases before-first
+--wrapternary before-operators
+
+# Function formatting
+--funcattributes prev-line
+--typeattributes prev-line
+--varattributes same-line
+--storedvarattrs same-line
+--computedvarattrs same-line
+--guardelse auto
+
+# Control flow
+--elseposition same-line
+--shortoptionals always
+
+# Closures
+--closingparen balanced
+--trailingclosures
+
+# Comments and documentation
+--doccomments preserve
+--linebreaks lf
+
+# Enabled rules (mobile-friendly)
+--enable isEmpty
+--enable sortImports
+--enable duplicateImports
+--enable unusedArguments
+--enable redundantSelf
+--enable redundantReturn
+--enable redundantParens
+--enable redundantGet
+--enable redundantInit
+--enable redundantVoidReturnType
+--enable redundantNilInit
+--enable redundantLet
+--enable redundantPattern
+--enable redundantRawValues
+--enable redundantExtensionACL
+--enable redundantFileprivate
+--enable redundantClosure
+--enable redundantBackticks
+--enable redundantBreak
+--enable redundantObjc
+--enable redundantType
+--enable hoistPatternLet
+--enable wrapMultilineStatementBraces
+--enable braces
+--enable andOperator
+--enable anyObjectProtocol
+--enable blankLinesAtEndOfScope
+--enable blankLinesAtStartOfScope
+--enable blankLinesBetweenScopes
+--enable consecutiveBlankLines
+--enable consecutiveSpaces
+--enable duplicateImports
+--enable elseOnSameLine
+--enable emptyBraces
+--enable enumNamespaces
+--enable extensionAccessControl
+--enable hoistPatternLet
+--enable initCoderUnavailable
+--enable leadingDelimiters
+--enable linebreakAtEndOfFile
+--enable markTypes
+--enable numberFormatting
+--enable preferKeyPath
+--enable spaceAroundBraces
+--enable spaceAroundBrackets
+--enable spaceAroundComments
+--enable spaceAroundGenerics
+--enable spaceAroundOperators
+--enable spaceAroundParens
+--enable spaceInsideBraces
+--enable spaceInsideBrackets
+--enable spaceInsideComments
+--enable spaceInsideGenerics
+--enable spaceInsideParens
+--enable strongOutlets
+--enable strongifiedSelf
+--enable todos
+--enable trailingCommas
+--enable trailingSpace
+--enable typeSugar
+--enable void
+--enable wrap
+--enable wrapArguments
+--enable yodaConditions
+
+# Disabled rules (too aggressive for rapid development)
+--disable organizeDeclarations
+--disable blankLinesAroundMark
+--disable sortedSwitchCases
+--disable wrapEnumCases
+--disable wrapSwitchCases

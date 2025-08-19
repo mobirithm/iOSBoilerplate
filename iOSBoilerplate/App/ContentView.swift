@@ -14,15 +14,15 @@ struct ContentView: View {
                 Image(systemName: "swift")
                     .font(.system(size: 80))
                     .foregroundColor(.blue)
-                
+
                 Text("iOS Boilerplate")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                
+
                 Text("SwiftUI Template")
                     .font(.title2)
                     .foregroundColor(.secondary)
-                
+
                 VStack(spacing: 8) {
                     HStack {
                         Text("Version:")
@@ -31,7 +31,7 @@ struct ContentView: View {
                         Text(appVersion)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     HStack {
                         Text("Build:")
                             .fontWeight(.medium)
@@ -43,9 +43,9 @@ struct ContentView: View {
                 .padding()
                 .background(Color(.systemGray6))
                 .cornerRadius(12)
-                
+
                 Spacer()
-                
+
                 Text("Ready for rapid consumer app development")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -55,11 +55,11 @@ struct ContentView: View {
             .navigationTitle("Home")
         }
     }
-    
+
     private var appVersion: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
     }
-    
+
     private var buildNumber: String {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
     }
