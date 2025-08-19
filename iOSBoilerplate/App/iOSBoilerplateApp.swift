@@ -13,6 +13,7 @@ struct IOSBoilerplateApp: App {
         WindowGroup {
             ContentView()
                 .withThemeManager()
+                .withLocalizationManager()
         }
     }
 }

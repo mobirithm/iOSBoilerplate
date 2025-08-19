@@ -1,0 +1,118 @@
+/* 
+  Localizable.strings (Turkish)
+  iOSBoilerplate
+  
+  Created by Mobirithm Dev Team
+*/
+
+// MARK: - App General
+"app.title" = "iOS Şablonu";
+"app.subtitle" = "SwiftUI Şablonu";
+"app.description" = "Hızlı tüketici uygulaması geliştirme için hazır";
+
+// MARK: - Navigation
+"nav.home" = "Ana Sayfa";
+"nav.settings" = "Ayarlar";
+"nav.profile" = "Profil";
+"nav.back" = "Geri";
+"nav.close" = "Kapat";
+"nav.done" = "Tamam";
+"nav.cancel" = "İptal";
+"nav.save" = "Kaydet";
+
+// MARK: - Buttons
+"button.continue" = "Devam Et";
+"button.getStarted" = "Başlayın";
+"button.tryAgain" = "Tekrar Deneyin";
+"button.learnMore" = "Daha Fazla Bilgi";
+"button.upgrade" = "Yükselt";
+"button.subscribe" = "Abone Ol";
+"button.signIn" = "Giriş Yap";
+"button.signUp" = "Kayıt Ol";
+"button.signOut" = "Çıkış Yap";
+
+// MARK: - Authentication
+"auth.signIn" = "Giriş Yap";
+"auth.signUp" = "Kayıt Ol";
+"auth.email" = "E-posta";
+"auth.password" = "Şifre";
+"auth.confirmPassword" = "Şifre Onayı";
+"auth.forgotPassword" = "Şifremi Unuttum?";
+"auth.createAccount" = "Hesap Oluştur";
+"auth.alreadyHaveAccount" = "Zaten hesabınız var mı?";
+"auth.dontHaveAccount" = "Hesabınız yok mu?";
+
+// MARK: - Errors
+"error.general" = "Bir şeyler yanlış gitti";
+"error.network" = "Ağ bağlantısı başarısız";
+"error.invalidEmail" = "Lütfen geçerli bir e-posta adresi girin";
+"error.passwordTooShort" = "Şifre en az 8 karakter olmalıdır";
+"error.passwordsDontMatch" = "Şifreler eşleşmiyor";
+"error.emailRequired" = "E-posta gereklidir";
+"error.passwordRequired" = "Şifre gereklidir";
+
+// MARK: - Success Messages
+"success.accountCreated" = "Hesap başarıyla oluşturuldu";
+"success.passwordChanged" = "Şifre başarıyla değiştirildi";
+"success.emailVerified" = "E-posta başarıyla doğrulandı";
+"success.settingsSaved" = "Ayarlar başarıyla kaydedildi";
+
+// MARK: - Settings
+"settings.title" = "Ayarlar";
+"settings.language" = "Dil";
+"settings.theme" = "Tema";
+"settings.notifications" = "Bildirimler";
+"settings.privacy" = "Gizlilik";
+"settings.about" = "Hakkında";
+"settings.version" = "Sürüm";
+"settings.build" = "Yapı";
+
+// MARK: - Theme
+"theme.system" = "Sistem";
+"theme.light" = "Açık";
+"theme.dark" = "Koyu";
+"theme.toggle" = "Tema Değiştir";
+
+// MARK: - Component Gallery
+"gallery.title" = "Bileşen Galerisi";
+"gallery.buttons" = "Düğmeler";
+"gallery.textFields" = "Metin Alanları";
+"gallery.cards" = "Kartlar";
+"gallery.listRows" = "Liste Satırları";
+"gallery.paywallHeaders" = "Ödeme Duvarı Başlıkları";
+
+// MARK: - Design Tokens
+"designTokens.title" = "Tasarım Belirteçleri";
+"designTokens.colors" = "Renkler";
+"designTokens.typography" = "Tipografi";
+"designTokens.spacing" = "Boşluk";
+"designTokens.themeControls" = "Tema Kontrolleri";
+"designTokens.componentExamples" = "Bileşen Örnekleri";
+
+// MARK: - Pluralization Examples
+"notification.count" = "%d bildirim";
+"notification.count##{one}" = "%d bildirim";
+"notification.count##{other}" = "%d bildirim";
+
+"message.count" = "%d mesaj";
+"message.count##{one}" = "%d mesaj";
+"message.count##{other}" = "%d mesaj";
+
+"item.selected" = "%d öğe seçildi";
+"item.selected##{one}" = "%d öğe seçildi";
+"item.selected##{other}" = "%d öğe seçildi";
+
+// MARK: - RTL Test Content
+"rtl.title" = "RTL Düzen Testi";
+"rtl.description" = "Bu sayfa Arapça ve İbranice diller için sağdan sola düzen desteğini test eder.";
+"rtl.sample.text" = "123 sayıları ve @#$% sembolleri içeren örnek metin";
+"rtl.alignment.test" = "Metin hizalama ve düzen yönü testi";
+"rtl.navigation.test" = "Navigasyon ve düğme hizalama testi";
+
+// MARK: - Locale
+"locale.picker.title" = "Dil Seçin";
+"locale.current" = "Mevcut Dil";
+"locale.english" = "English";
+"locale.turkish" = "Türkçe";
+"locale.arabic" = "العربية";
+"locale.hebrew" = "עברית";

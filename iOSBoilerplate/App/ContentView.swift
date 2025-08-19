@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject private var themeManager: ThemeManager
+    @EnvironmentObject private var localizationManager: LocalizationManager
+    @State private var showLocalePicker = false
 
     var body: some View {
         NavigationView {
@@ -19,18 +21,18 @@ struct ContentView: View {
                     .foregroundColor(DesignTokens.Colors.primary)
 
                 // App Title
-                Text("iOS Boilerplate")
+                Text("app.title".localized)
                     .font(DesignTokens.Typography.largeTitle)
                     .foregroundColor(DesignTokens.Colors.textPrimary)
 
-                Text("SwiftUI Template")
+                Text("app.subtitle".localized)
                     .font(DesignTokens.Typography.title3)
                     .foregroundColor(DesignTokens.Colors.textSecondary)
 
                 // Version Info Card
                 VStack(spacing: DesignTokens.Spacing.sm) {
                     HStack {
-                        Text("Version:")
+                        Text("settings.version".localized)
                             .font(DesignTokens.Typography.callout)
                             .fontWeight(.medium)
                             .foregroundColor(DesignTokens.Colors.textPrimary)
@@ -41,7 +43,7 @@ struct ContentView: View {
                     }
 
                     HStack {
-                        Text("Build:")
+                        Text("settings.build".localized)
                             .font(DesignTokens.Typography.callout)
                             .fontWeight(.medium)
                             .foregroundColor(DesignTokens.Colors.textPrimary)
@@ -61,7 +63,7 @@ struct ContentView: View {
                     NavigationLink(destination: ComponentGallery()) {
                         HStack {
                             Image(systemName: "square.grid.3x3")
-                            Text("Component Gallery")
+                            Text("gallery.title".localized)
                                 .font(DesignTokens.Typography.buttonTitle)
                         }
                         .frame(maxWidth: .infinity)
@@ -74,7 +76,7 @@ struct ContentView: View {
                     NavigationLink(destination: DesignTokensDemo()) {
                         HStack {
                             Image(systemName: "paintpalette")
-                            Text("Design Tokens Demo")
+                            Text("designTokens.title".localized)
                                 .font(DesignTokens.Typography.buttonTitle)
                         }
                         .frame(maxWidth: .infinity)
@@ -84,39 +86,76 @@ struct ContentView: View {
                         .cornerRadius(DesignTokens.CornerRadius.button)
                     }
 
-                    Button {
-                        withAnimation(DesignTokens.Animation.medium) {
-                            themeManager.toggleTheme()
-                        }
-                    } label: {
+                    NavigationLink(destination: RTLTestView()) {
                         HStack {
-                            Image(systemName: themeManager.currentMode.systemImage)
-                            Text("Toggle Theme (\(themeManager.currentMode.displayName))")
+                            Image(systemName: "globe")
+                            Text("rtl.title".localized)
                                 .font(DesignTokens.Typography.buttonTitle)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(DesignTokens.Spacing.buttonPadding)
-                        .background(DesignTokens.Colors.surface)
-                        .foregroundColor(DesignTokens.Colors.textPrimary)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.button)
-                                .stroke(DesignTokens.Colors.border, lineWidth: 1)
-                        )
+                        .background(DesignTokens.Colors.info)
+                        .foregroundColor(DesignTokens.Colors.onPrimary)
+                        .cornerRadius(DesignTokens.CornerRadius.button)
+                    }
+
+                    HStack(spacing: DesignTokens.Spacing.md) {
+                        Button {
+                            withAnimation(DesignTokens.Animation.medium) {
+                                themeManager.toggleTheme()
+                            }
+                        } label: {
+                            HStack {
+                                Image(systemName: themeManager.currentMode.systemImage)
+                                Text("theme.toggle".localized)
+                                    .font(DesignTokens.Typography.buttonTitle)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(DesignTokens.Spacing.buttonPadding)
+                            .background(DesignTokens.Colors.surface)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.button)
+                                    .stroke(DesignTokens.Colors.border, lineWidth: 1)
+                            )
+                        }
+
+                        Button {
+                            showLocalePicker = true
+                        } label: {
+                            HStack {
+                                Text(localizationManager.currentLocale.flag)
+                                Text("settings.language".localized)
+                                    .font(DesignTokens.Typography.buttonTitle)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(DesignTokens.Spacing.buttonPadding)
+                            .background(DesignTokens.Colors.surface)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.button)
+                                    .stroke(DesignTokens.Colors.border, lineWidth: 1)
+                            )
+                        }
                     }
                 }
 
                 Spacer()
 
-                Text("Ready for rapid consumer app development")
+                Text("app.description".localized)
                     .font(DesignTokens.Typography.footnote)
                     .foregroundColor(DesignTokens.Colors.textTertiary)
                     .multilineTextAlignment(.center)
             }
             .padding(DesignTokens.Spacing.screenPadding)
             .background(DesignTokens.Colors.background)
-            .navigationTitle("Home")
+            .navigationTitle("nav.home".localized)
         }
         .themedColorScheme()
+        .rtlAware()
+        .sheet(isPresented: $showLocalePicker) {
+            LocalePicker()
+        }
     }
 
     private var appVersion: String {

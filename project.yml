@@ -24,6 +24,9 @@ targets:
     resources:
       - iOSBoilerplate/Resources/**
       - iOSBoilerplate/Preview Content/**
+    localizations:
+      - en
+      - tr
     prebuildScripts:
       - name: SwiftLint
         script: |

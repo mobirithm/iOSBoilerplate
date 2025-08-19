@@ -1,0 +1,118 @@
+/* 
+  Localizable.strings (English)
+  iOSBoilerplate
+  
+  Created by Mobirithm Dev Team
+*/
+
+// MARK: - App General
+"app.title" = "iOS Boilerplate";
+"app.subtitle" = "SwiftUI Template";
+"app.description" = "Ready for rapid consumer app development";
+
+// MARK: - Navigation
+"nav.home" = "Home";
+"nav.settings" = "Settings";
+"nav.profile" = "Profile";
+"nav.back" = "Back";
+"nav.close" = "Close";
+"nav.done" = "Done";
+"nav.cancel" = "Cancel";
+"nav.save" = "Save";
+
+// MARK: - Buttons
+"button.continue" = "Continue";
+"button.getStarted" = "Get Started";
+"button.tryAgain" = "Try Again";
+"button.learnMore" = "Learn More";
+"button.upgrade" = "Upgrade";
+"button.subscribe" = "Subscribe";
+"button.signIn" = "Sign In";
+"button.signUp" = "Sign Up";
+"button.signOut" = "Sign Out";
+
+// MARK: - Authentication
+"auth.signIn" = "Sign In";
+"auth.signUp" = "Sign Up";
+"auth.email" = "Email";
+"auth.password" = "Password";
+"auth.confirmPassword" = "Confirm Password";
+"auth.forgotPassword" = "Forgot Password?";
+"auth.createAccount" = "Create Account";
+"auth.alreadyHaveAccount" = "Already have an account?";
+"auth.dontHaveAccount" = "Don't have an account?";
+
+// MARK: - Errors
+"error.general" = "Something went wrong";
+"error.network" = "Network connection failed";
+"error.invalidEmail" = "Please enter a valid email address";
+"error.passwordTooShort" = "Password must be at least 8 characters";
+"error.passwordsDontMatch" = "Passwords don't match";
+"error.emailRequired" = "Email is required";
+"error.passwordRequired" = "Password is required";
+
+// MARK: - Success Messages
+"success.accountCreated" = "Account created successfully";
+"success.passwordChanged" = "Password changed successfully";
+"success.emailVerified" = "Email verified successfully";
+"success.settingsSaved" = "Settings saved successfully";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+"settings.language" = "Language";
+"settings.theme" = "Theme";
+"settings.notifications" = "Notifications";
+"settings.privacy" = "Privacy";
+"settings.about" = "About";
+"settings.version" = "Version";
+"settings.build" = "Build";
+
+// MARK: - Theme
+"theme.system" = "System";
+"theme.light" = "Light";
+"theme.dark" = "Dark";
+"theme.toggle" = "Toggle Theme";
+
+// MARK: - Component Gallery
+"gallery.title" = "Component Gallery";
+"gallery.buttons" = "Buttons";
+"gallery.textFields" = "Text Fields";
+"gallery.cards" = "Cards";
+"gallery.listRows" = "List Rows";
+"gallery.paywallHeaders" = "Paywall Headers";
+
+// MARK: - Design Tokens
+"designTokens.title" = "Design Tokens";
+"designTokens.colors" = "Colors";
+"designTokens.typography" = "Typography";
+"designTokens.spacing" = "Spacing";
+"designTokens.themeControls" = "Theme Controls";
+"designTokens.componentExamples" = "Component Examples";
+
+// MARK: - Pluralization Examples
+"notification.count" = "%d notification";
+"notification.count##{one}" = "%d notification";
+"notification.count##{other}" = "%d notifications";
+
+"message.count" = "%d message";
+"message.count##{one}" = "%d message";
+"message.count##{other}" = "%d messages";
+
+"item.selected" = "%d item selected";
+"item.selected##{one}" = "%d item selected";
+"item.selected##{other}" = "%d items selected";
+
+// MARK: - RTL Test Content
+"rtl.title" = "RTL Layout Test";
+"rtl.description" = "This page tests right-to-left layout support for Arabic and Hebrew languages.";
+"rtl.sample.text" = "Sample text with numbers 123 and symbols @#$%";
+"rtl.alignment.test" = "Text alignment and layout direction test";
+"rtl.navigation.test" = "Navigation and button alignment test";
+
+// MARK: - Locale
+"locale.picker.title" = "Select Language";
+"locale.current" = "Current Language";
+"locale.english" = "English";
+"locale.turkish" = "Türkçe";
+"locale.arabic" = "العربية";
+"locale.hebrew" = "עברית";
