@@ -11,9 +11,10 @@ import SwiftUI
 struct IOSBoilerplateApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AuthenticatedView()
                 .withThemeManager()
                 .withLocalizationManager()
+                .withAuthManager()
         }
     }
 }

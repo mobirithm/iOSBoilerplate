@@ -30,10 +30,14 @@
 "button.signIn" = "Giriş Yap";
 "button.signUp" = "Kayıt Ol";
 "button.signOut" = "Çıkış Yap";
+"button.ok" = "Tamam";
 
 // MARK: - Authentication
 "auth.signIn" = "Giriş Yap";
 "auth.signUp" = "Kayıt Ol";
+"auth.signInWithApple" = "Apple ile Giriş Yap";
+"auth.continueAsGuest" = "Misafir Olarak Devam Et";
+"auth.or" = "veya";
 "auth.email" = "E-posta";
 "auth.password" = "Şifre";
 "auth.confirmPassword" = "Şifre Onayı";
@@ -41,6 +45,34 @@
 "auth.createAccount" = "Hesap Oluştur";
 "auth.alreadyHaveAccount" = "Zaten hesabınız var mı?";
 "auth.dontHaveAccount" = "Hesabınız yok mu?";
+"auth.signOut" = "Çıkış Yap";
+"auth.deleteAccount" = "Hesabı Sil";
+"auth.welcome.title" = "iOS Şablonuna Hoş Geldiniz";
+"auth.welcome.description" = "Tüm özelliklere erişmek ve verilerinizi cihazlar arasında senkronize etmek için giriş yapın.";
+"auth.verified" = "Doğrulanmış";
+"auth.unverified" = "Doğrulanmamış";
+"auth.accountInfo" = "Hesap Bilgileri";
+"auth.accountActions" = "Hesap İşlemleri";
+"auth.userID" = "Kullanıcı ID";
+"auth.fullName" = "Ad Soyad";
+"auth.notProvided" = "Sağlanmamış";
+"auth.user.anonymous" = "Anonim Kullanıcı";
+"auth.signOut.confirm" = "Çıkış Yap";
+"auth.signOut.message" = "Çıkış yapmak istediğinizden emin misiniz?";
+"auth.deleteAccount.confirm" = "Hesabı Sil";
+"auth.deleteAccount.message" = "Bu işlem geri alınamaz. Tüm verileriniz kalıcı olarak silinecektir.";
+"auth.guestMode.description" = "Misafir modu burada uygulanacaktır. Giriş yapmadan uygulamaya göz atabilirsiniz.";
+"auth.privacy" = "Gizlilik Politikası";
+"auth.terms" = "Hizmet Şartları";
+"auth.privacy.description" = "Gizlilik politikası burada gösterilecektir.";
+"auth.terms.description" = "Hizmet şartları burada gösterilecektir.";
+
+// MARK: - Authentication Errors
+"auth.error.cancelled" = "Giriş iptal edildi";
+"auth.error.failed" = "Giriş başarısız";
+"auth.error.invalidCredentials" = "Geçersiz kimlik bilgileri";
+"auth.error.network" = "Ağ hatası oluştu";
+"auth.loading" = "Yükleniyor...";
 
 // MARK: - Errors
 "error.general" = "Bir şeyler yanlış gitti";
@@ -116,3 +148,9 @@
 "locale.turkish" = "Türkçe";
 "locale.arabic" = "العربية";
 "locale.hebrew" = "עברית";
+
+// MARK: - Keychain Errors
+"error.keychain.itemNotFound" = "Keychain'de öğe bulunamadı";
+"error.keychain.duplicateItem" = "Öğe keychain'de zaten mevcut";
+"error.keychain.invalidFormat" = "Geçersiz keychain öğe formatı";
+"error.keychain.unexpected" = "Beklenmeyen keychain hatası: %d";

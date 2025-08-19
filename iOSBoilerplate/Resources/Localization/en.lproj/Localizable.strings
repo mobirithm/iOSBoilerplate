@@ -30,10 +30,14 @@
 "button.signIn" = "Sign In";
 "button.signUp" = "Sign Up";
 "button.signOut" = "Sign Out";
+"button.ok" = "OK";
 
 // MARK: - Authentication
 "auth.signIn" = "Sign In";
 "auth.signUp" = "Sign Up";
+"auth.signInWithApple" = "Sign in with Apple";
+"auth.continueAsGuest" = "Continue as Guest";
+"auth.or" = "or";
 "auth.email" = "Email";
 "auth.password" = "Password";
 "auth.confirmPassword" = "Confirm Password";
@@ -41,6 +45,34 @@
 "auth.createAccount" = "Create Account";
 "auth.alreadyHaveAccount" = "Already have an account?";
 "auth.dontHaveAccount" = "Don't have an account?";
+"auth.signOut" = "Sign Out";
+"auth.deleteAccount" = "Delete Account";
+"auth.welcome.title" = "Welcome to iOS Boilerplate";
+"auth.welcome.description" = "Sign in to access all features and sync your data across devices.";
+"auth.verified" = "Verified";
+"auth.unverified" = "Unverified";
+"auth.accountInfo" = "Account Information";
+"auth.accountActions" = "Account Actions";
+"auth.userID" = "User ID";
+"auth.fullName" = "Full Name";
+"auth.notProvided" = "Not Provided";
+"auth.user.anonymous" = "Anonymous User";
+"auth.signOut.confirm" = "Sign Out";
+"auth.signOut.message" = "Are you sure you want to sign out?";
+"auth.deleteAccount.confirm" = "Delete Account";
+"auth.deleteAccount.message" = "This action cannot be undone. All your data will be permanently deleted.";
+"auth.guestMode.description" = "Guest mode would be implemented here. You can browse the app without signing in.";
+"auth.privacy" = "Privacy Policy";
+"auth.terms" = "Terms of Service";
+"auth.privacy.description" = "Privacy policy would be shown here.";
+"auth.terms.description" = "Terms of service would be shown here.";
+
+// MARK: - Authentication Errors
+"auth.error.cancelled" = "Sign in was cancelled";
+"auth.error.failed" = "Sign in failed";
+"auth.error.invalidCredentials" = "Invalid credentials";
+"auth.error.network" = "Network error occurred";
+"auth.loading" = "Loading...";
 
 // MARK: - Errors
 "error.general" = "Something went wrong";
@@ -116,3 +148,9 @@
 "locale.turkish" = "Türkçe";
 "locale.arabic" = "العربية";
 "locale.hebrew" = "עברית";
+
+// MARK: - Keychain Errors
+"error.keychain.itemNotFound" = "Item not found in keychain";
+"error.keychain.duplicateItem" = "Item already exists in keychain";
+"error.keychain.invalidFormat" = "Invalid keychain item format";
+"error.keychain.unexpected" = "Unexpected keychain error: %d";

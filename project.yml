@@ -58,6 +58,8 @@ targets:
       ENABLE_PREVIEWS: true
       DEVELOPMENT_ASSET_PATHS: "\"iOSBoilerplate/Preview Content\""
       GENERATE_INFOPLIST_FILE: true
+    entitlements:
+      path: iOSBoilerplate/Resources/iOSBoilerplate.entitlements
 
   iOSBoilerplateTests:
     type: bundle.unit-test
