@@ -114,22 +114,11 @@ struct SignInView: View {
                             let fullName = appleIDCredential.fullName
                             let idToken = appleIDCredential.identityToken.flatMap { String(data: $0, encoding: .utf8) }
 
-                            print("🍎 Apple Sign-In: Received credentials:")
-                            print("   - User ID: \(userID)")
-                            print("   - Email from Apple: \(email ?? "nil")")
-                            print(
-                                "   - Full Name from Apple: \(fullName?.givenName ?? "nil") \(fullName?.familyName ?? "nil")"
-                            )
-
                             // Check if we already have stored email/full name
                             let storedEmail = try? authManager.keychainManager
                                 .loadString(for: KeychainManager.Keys.userEmail)
                             let storedFullName = try? authManager.keychainManager
                                 .loadString(for: KeychainManager.Keys.userFullName)
-
-                            print("🔐 Stored credentials:")
-                            print("   - Stored Email: \(storedEmail ?? "nil")")
-                            print("   - Stored Full Name: \(storedFullName ?? "nil")")
 
                             // Use Apple's values if provided, otherwise use stored values
                             let finalEmail = email ?? storedEmail
@@ -143,10 +132,6 @@ struct SignInView: View {
                             } else {
                                 finalFullName = storedFullName
                             }
-
-                            print("🔐 Final user data:")
-                            print("   - Final Email: \(finalEmail ?? "nil")")
-                            print("   - Final Full Name: \(finalFullName ?? "nil")")
 
                             let user = User(
                                 id: userID,
@@ -182,9 +167,8 @@ struct SignInView: View {
                                         for: KeychainManager.Keys.appleIDToken
                                     )
                                 }
-                                print("✅ Successfully saved credentials to keychain")
                             } catch {
-                                print("❌ Failed to save credentials to keychain: \(error)")
+                                print("Failed to save credentials to keychain: \(error)")
                             }
                         }
                     case let .failure(error):

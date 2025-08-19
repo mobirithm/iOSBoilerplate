@@ -205,8 +205,13 @@ struct ProfileView: View {
                         MBButton(title: "Unlock Premium", style: .primary, size: .large) {
                             showPaywall = true
                         }
-                        MBButton(title: "Restore Purchases", style: .tertiary, size: .medium) {
-                            revenueCat.restore()
+                        HStack(spacing: DesignTokens.Spacing.sm) {
+                            MBButton(title: "Restore Purchases", style: .tertiary, size: .medium) {
+                                revenueCat.restore()
+                            }
+                            MBButton(title: "Refresh Status", style: .tertiary, size: .medium) {
+                                revenueCat.refresh()
+                            }
                         }
                     }
                 }

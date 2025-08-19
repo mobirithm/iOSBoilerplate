@@ -100,7 +100,6 @@ public class AuthManager: NSObject, ObservableObject {
 
     /// Check current authentication state
     public func checkAuthenticationState() {
-        print("🔐 AuthManager: Checking authentication state...")
         authState = .loading
 
         Task {
@@ -108,28 +107,18 @@ public class AuthManager: NSObject, ObservableObject {
                 do {
                     // Check if we have stored credentials
                     let hasUserID = keychainManager.exists(for: KeychainManager.Keys.appleUserID)
-                    print("🔐 AuthManager: Has stored Apple User ID: \(hasUserID)")
 
                     if hasUserID {
-                        print("🔐 AuthManager: Found stored Apple User ID in keychain")
                         let userID = try keychainManager.loadString(for: KeychainManager.Keys.appleUserID)
                         let email = try? keychainManager.loadString(for: KeychainManager.Keys.userEmail)
                         let fullName = try? keychainManager.loadString(for: KeychainManager.Keys.userFullName)
 
-                        print("🔐 AuthManager: Loaded from keychain:")
-                        print("   - User ID: \(userID)")
-                        print("   - Email: \(email ?? "nil")")
-                        print("   - Full Name: \(fullName ?? "nil")")
-
                         let user = User(id: userID, email: email, fullName: fullName, isEmailVerified: email != nil)
-                        print("🔐 AuthManager: Created user object, setting signed in state...")
                         setSignedInState(user: user)
                     } else {
-                        print("🔐 AuthManager: No stored credentials found, setting signed out state")
                         setSignedOutState()
                     }
                 } catch {
-                    print("❌ AuthManager: Error checking authentication state: \(error)")
                     setErrorState(error: .keychainError(error as? KeychainError ?? .invalidItemFormat))
                 }
             }
@@ -177,17 +166,16 @@ public class AuthManager: NSObject, ObservableObject {
     // MARK: - Private Methods
 
     public func setSignedInState(user: User) {
-        print("🔐 AuthManager: Setting signed in state for user:")
-        print("   - ID: \(user.id)")
-        print("   - Email: \(user.email ?? "nil")")
-        print("   - Full Name: \(user.fullName ?? "nil")")
-        print("   - Is Email Verified: \(user.isEmailVerified)")
-
         currentUser = user
         isSignedIn = true
         authState = .signedIn(user)
 
-        print("🔐 AuthManager: State updated - isSignedIn: \(isSignedIn), authState: \(authState)")
+        // Check RevenueCat entitlements after successful sign-in
+        #if canImport(RevenueCat)
+            if let revenueCatManager = try? RevenueCatManager.shared {
+                revenueCatManager.checkCurrentEntitlement()
+            }
+        #endif
     }
 
     private func setSignedOutState() {
