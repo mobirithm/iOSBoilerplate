@@ -8,52 +8,102 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject private var themeManager: ThemeManager
+
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
+            VStack(spacing: DesignTokens.Spacing.lg) {
+                // App Icon
                 Image(systemName: "swift")
                     .font(.system(size: 80))
-                    .foregroundColor(.blue)
+                    .foregroundColor(DesignTokens.Colors.primary)
 
+                // App Title
                 Text("iOS Boilerplate")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+                    .font(DesignTokens.Typography.largeTitle)
+                    .foregroundColor(DesignTokens.Colors.textPrimary)
 
                 Text("SwiftUI Template")
-                    .font(.title2)
-                    .foregroundColor(.secondary)
+                    .font(DesignTokens.Typography.title3)
+                    .foregroundColor(DesignTokens.Colors.textSecondary)
 
-                VStack(spacing: 8) {
+                // Version Info Card
+                VStack(spacing: DesignTokens.Spacing.sm) {
                     HStack {
                         Text("Version:")
+                            .font(DesignTokens.Typography.callout)
                             .fontWeight(.medium)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
                         Spacer()
                         Text(appVersion)
-                            .foregroundColor(.secondary)
+                            .font(DesignTokens.Typography.callout)
+                            .foregroundColor(DesignTokens.Colors.textSecondary)
                     }
 
                     HStack {
                         Text("Build:")
+                            .font(DesignTokens.Typography.callout)
                             .fontWeight(.medium)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
                         Spacer()
                         Text(buildNumber)
-                            .foregroundColor(.secondary)
+                            .font(DesignTokens.Typography.callout)
+                            .foregroundColor(DesignTokens.Colors.textSecondary)
                     }
                 }
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(12)
+                .padding(DesignTokens.Spacing.cardPadding)
+                .background(DesignTokens.Colors.surface)
+                .cornerRadius(DesignTokens.CornerRadius.card)
+                .shadow(DesignTokens.Shadow.small)
+
+                // Navigation Buttons
+                VStack(spacing: DesignTokens.Spacing.md) {
+                    NavigationLink(destination: DesignTokensDemo()) {
+                        HStack {
+                            Image(systemName: "paintpalette")
+                            Text("Design Tokens Demo")
+                                .font(DesignTokens.Typography.buttonTitle)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(DesignTokens.Spacing.buttonPadding)
+                        .background(DesignTokens.Colors.primary)
+                        .foregroundColor(DesignTokens.Colors.onPrimary)
+                        .cornerRadius(DesignTokens.CornerRadius.button)
+                    }
+
+                    Button {
+                        withAnimation(DesignTokens.Animation.medium) {
+                            themeManager.toggleTheme()
+                        }
+                    } label: {
+                        HStack {
+                            Image(systemName: themeManager.currentMode.systemImage)
+                            Text("Toggle Theme (\(themeManager.currentMode.displayName))")
+                                .font(DesignTokens.Typography.buttonTitle)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(DesignTokens.Spacing.buttonPadding)
+                        .background(DesignTokens.Colors.surface)
+                        .foregroundColor(DesignTokens.Colors.textPrimary)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: DesignTokens.CornerRadius.button)
+                                .stroke(DesignTokens.Colors.border, lineWidth: 1)
+                        )
+                    }
+                }
 
                 Spacer()
 
                 Text("Ready for rapid consumer app development")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(DesignTokens.Typography.footnote)
+                    .foregroundColor(DesignTokens.Colors.textTertiary)
                     .multilineTextAlignment(.center)
             }
-            .padding()
+            .padding(DesignTokens.Spacing.screenPadding)
+            .background(DesignTokens.Colors.background)
             .navigationTitle("Home")
         }
+        .themedColorScheme()
     }
 
     private var appVersion: String {

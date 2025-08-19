@@ -12,6 +12,7 @@ struct IOSBoilerplateApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .withThemeManager()
         }
     }
 }
