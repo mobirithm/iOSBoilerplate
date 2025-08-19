@@ -105,8 +105,50 @@ struct SignInView: View {
                 onRequest: { request in
                     request.requestedScopes = [.fullName, .email]
                 },
-                onCompletion: { _ in
-                    // Delegate-based flow handled in AuthManager
+                onCompletion: { result in
+                    switch result {
+                    case let .success(authorization):
+                        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
+                            let userID = appleIDCredential.user
+                            let email = appleIDCredential.email
+                            let fullName = appleIDCredential.fullName
+                            let idToken = appleIDCredential.identityToken.flatMap { String(data: $0, encoding: .utf8) }
+
+                            // Create user object
+                            let displayName = [fullName?.givenName, fullName?.familyName]
+                                .compactMap { $0 }
+                                .joined(separator: " ")
+
+                            let user = User(
+                                id: userID,
+                                email: email,
+                                fullName: displayName.isEmpty ? nil : displayName,
+                                isEmailVerified: email != nil
+                            )
+
+                            // Save to keychain and update state
+                            authManager.setSignedInState(user: user)
+                        }
+                    case let .failure(error):
+                        if let authError = error as? ASAuthorizationError {
+                            switch authError.code {
+                            case .canceled:
+                                authManager.setErrorState(error: .cancelled)
+                            case .failed:
+                                authManager.setErrorState(error: .failed)
+                            case .invalidResponse:
+                                authManager.setErrorState(error: .invalidCredentials)
+                            case .notHandled:
+                                authManager.setErrorState(error: .failed)
+                            case .unknown:
+                                authManager.setErrorState(error: .unknown(error))
+                            @unknown default:
+                                authManager.setErrorState(error: .unknown(error))
+                            }
+                        } else {
+                            authManager.setErrorState(error: .unknown(error))
+                        }
+                    }
                 }
             )
             .signInWithAppleButtonStyle(
@@ -115,16 +157,6 @@ struct SignInView: View {
             .frame(height: 50)
             .cornerRadius(DesignTokens.CornerRadius.button)
             .shadow(DesignTokens.Shadow.small)
-
-            // Alternative: Custom Apple Sign-In Button
-            MBButton(
-                title: "auth.signInWithApple".localized,
-                style: .primary,
-                size: .large,
-                isLoading: authManager.authState == .loading
-            ) {
-                authManager.signInWithApple()
-            }
 
             // Guest Mode
             VStack(spacing: DesignTokens.Spacing.md) {

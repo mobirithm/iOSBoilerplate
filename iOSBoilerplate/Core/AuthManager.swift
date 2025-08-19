@@ -163,7 +163,7 @@ public class AuthManager: NSObject, ObservableObject {
 
     // MARK: - Private Methods
 
-    private func setSignedInState(user: User) {
+    public func setSignedInState(user: User) {
         currentUser = user
         isSignedIn = true
         authState = .signedIn(user)
@@ -175,7 +175,7 @@ public class AuthManager: NSObject, ObservableObject {
         authState = .signedOut
     }
 
-    private func setErrorState(error: AuthError) {
+    public func setErrorState(error: AuthError) {
         currentUser = nil
         isSignedIn = false
         authState = .error(error)

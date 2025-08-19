@@ -217,21 +217,57 @@ struct ProfileView: View {
     private var paywallView: some View {
         NavigationView {
             VStack(spacing: DesignTokens.Spacing.md) {
-                List(revenueCat.availablePackages) { pkg in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(pkg.title)
-                            Text(pkg.price).foregroundColor(DesignTokens.Colors.textSecondary)
+                if revenueCat.availablePackages.isEmpty {
+                    VStack(spacing: DesignTokens.Spacing.md) {
+                        Image(systemName: "cart.badge.questionmark")
+                            .font(.system(size: 40))
+                            .foregroundColor(DesignTokens.Colors.textTertiary)
+
+                        Text("No products available")
+                            .font(DesignTokens.Typography.title3)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
+
+                        VStack(alignment: .leading, spacing: DesignTokens.Spacing.xs) {
+                            Text("- Ensure In-App Purchases capability is added in Signing & Capabilities")
+                                .foregroundColor(DesignTokens.Colors.textSecondary)
+                            Text(
+                                "- Add RevenueCat package and use correct iOS API key in Info.plist (REVENUECAT_API_KEY)"
+                            )
+                            .foregroundColor(DesignTokens.Colors.textSecondary)
+                            Text("- Configure a Current Offering with products in RevenueCat dashboard")
+                                .foregroundColor(DesignTokens.Colors.textSecondary)
+                            Text("- For Simulator: assign a StoreKit Configuration file with matching product IDs")
+                                .foregroundColor(DesignTokens.Colors.textSecondary)
                         }
-                        Spacer()
-                        MBButton(title: "Buy", style: .primary, size: .small) {
-                            revenueCat.purchase(packageId: pkg.id) { success in
-                                if success { showPaywall = false }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                        HStack(spacing: DesignTokens.Spacing.md) {
+                            MBButton(title: "Refresh", style: .primary, size: .large) {
+                                revenueCat.refresh()
+                            }
+                            MBButton(title: "Restore Purchases", style: .tertiary, size: .large) {
+                                revenueCat.restore()
                             }
                         }
                     }
+                    .padding()
+                } else {
+                    List(revenueCat.availablePackages) { pkg in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(pkg.title)
+                                Text(pkg.price).foregroundColor(DesignTokens.Colors.textSecondary)
+                            }
+                            Spacer()
+                            MBButton(title: "Buy", style: .primary, size: .small) {
+                                revenueCat.purchase(packageId: pkg.id) { success in
+                                    if success { showPaywall = false }
+                                }
+                            }
+                        }
+                    }
+                    .listStyle(.insetGrouped)
                 }
-                .listStyle(.insetGrouped)
 
                 MBButton(title: "Close", style: .tertiary, size: .large) { showPaywall = false }
             }
