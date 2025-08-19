@@ -117,7 +117,7 @@ public class ThemeManager: ObservableObject {
 // MARK: - ThemeManagerKey
 
 private struct ThemeManagerKey: EnvironmentKey {
-    static let defaultValue = ThemeManager.shared
+    @MainActor static var defaultValue: ThemeManager { ThemeManager.shared }
 }
 
 public extension EnvironmentValues {
@@ -130,11 +130,13 @@ public extension EnvironmentValues {
 // MARK: - View Extensions
 public extension View {
     /// Apply the current theme's color scheme
+    @MainActor
     func themedColorScheme() -> some View {
         preferredColorScheme(ThemeManager.shared.colorScheme)
     }
 
     /// Inject theme manager into environment
+    @MainActor
     func withThemeManager() -> some View {
         environmentObject(ThemeManager.shared)
     }

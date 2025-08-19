@@ -58,8 +58,18 @@ targets:
       ENABLE_PREVIEWS: true
       DEVELOPMENT_ASSET_PATHS: "\"iOSBoilerplate/Preview Content\""
       GENERATE_INFOPLIST_FILE: true
+      INFOPLIST_KEY_CFBundleURLTypes: |
+        - CFBundleURLName: com.mobirithm.iOSBoilerplate
+          CFBundleURLSchemes:
+            - com.mobirithm.iOSBoilerplate
+      CODE_SIGN_ENTITLEMENTS: iOSBoilerplate/Resources/iOSBoilerplate.entitlements
+      CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION: YES
+      CODE_SIGN_STYLE: Automatic
+      DEVELOPMENT_TEAM: "LMXDFJ6789"
     entitlements:
       path: iOSBoilerplate/Resources/iOSBoilerplate.entitlements
+    capabilities:
+      - com.apple.developer.applesignin
 
   iOSBoilerplateTests:
     type: bundle.unit-test

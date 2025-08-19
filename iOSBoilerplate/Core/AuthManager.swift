@@ -88,6 +88,7 @@ public class AuthManager: NSObject, ObservableObject {
 
     // MARK: - Private Properties
     private let keychainManager = KeychainManager.shared
+    private var authorizationControllerRef: ASAuthorizationController?
 
     // MARK: - Initialization
     override init() {
@@ -134,6 +135,7 @@ public class AuthManager: NSObject, ObservableObject {
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         authorizationController.delegate = self
         authorizationController.presentationContextProvider = self
+        authorizationControllerRef = authorizationController // retain to ensure callbacks
         authorizationController.performRequests()
     }
 
@@ -195,7 +197,7 @@ public class AuthManager: NSObject, ObservableObject {
                 try keychainManager.save(string: idToken, for: KeychainManager.Keys.appleIDToken)
             }
         } catch {
-            print("Failed to save user credentials: \(error)")
+            // Intentionally ignore; user state will still be updated
         }
     }
 
@@ -301,20 +303,30 @@ extension AuthManager: ASAuthorizationControllerDelegate {
 
 extension AuthManager: ASAuthorizationControllerPresentationContextProviding {
     public func presentationAnchor(for _: ASAuthorizationController) -> ASPresentationAnchor {
-        guard
-            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-            let window = windowScene.windows.first
-        else {
-            return UIWindow()
+        // Use modern UIWindowScene approach for iOS 15+
+        if
+            let windowScene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first(where: { $0.activationState == .foregroundActive })
+        {
+            if let keyWindow = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                return keyWindow
+            }
+
+            if let window = windowScene.windows.first {
+                return window
+            }
         }
-        return window
+
+        // Last resort: create a new window
+        return UIWindow()
     }
 }
 
 // MARK: - AuthManagerKey
 
 private struct AuthManagerKey: EnvironmentKey {
-    static let defaultValue = AuthManager.shared
+    @MainActor static var defaultValue: AuthManager { AuthManager.shared }
 }
 
 public extension EnvironmentValues {
@@ -327,6 +339,7 @@ public extension EnvironmentValues {
 // MARK: - View Extensions
 public extension View {
     /// Inject auth manager into environment
+    @MainActor
     func withAuthManager() -> some View {
         environmentObject(AuthManager.shared)
     }

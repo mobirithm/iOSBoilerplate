@@ -106,7 +106,7 @@ struct SignInView: View {
                     request.requestedScopes = [.fullName, .email]
                 },
                 onCompletion: { _ in
-                    // AuthManager handles the result through its delegate methods
+                    // Delegate-based flow handled in AuthManager
                 }
             )
             .signInWithAppleButtonStyle(
