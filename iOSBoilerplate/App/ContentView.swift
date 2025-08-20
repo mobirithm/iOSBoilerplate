@@ -99,6 +99,19 @@ struct ContentView: View {
                         .cornerRadius(DesignTokens.CornerRadius.button)
                     }
 
+                    NavigationLink(destination: PaywallDemoView()) {
+                        HStack {
+                            Image(systemName: "creditcard.fill")
+                            Text("Paywall Demo")
+                                .font(DesignTokens.Typography.buttonTitle)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(DesignTokens.Spacing.buttonPadding)
+                        .background(DesignTokens.Colors.warning)
+                        .foregroundColor(DesignTokens.Colors.onPrimary)
+                        .cornerRadius(DesignTokens.CornerRadius.button)
+                    }
+
                     HStack(spacing: DesignTokens.Spacing.md) {
                         Button {
                             withAnimation(DesignTokens.Animation.medium) {

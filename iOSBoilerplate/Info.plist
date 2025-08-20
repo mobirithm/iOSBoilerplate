@@ -25,5 +25,7 @@
 		</array>
 		<key>GIDClientID</key>
 		<string>222440005-gl3fl5tipjsa3jdk99ug5dabva3cvro7.apps.googleusercontent.com</string>
+		<key>SUPERWALL_API_KEY</key>
+		<string>pk_coTEC0yvj9G24dHIqiXYk</string>
 	</dict>
 </plist>

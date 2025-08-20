@@ -9,6 +9,9 @@ import SwiftUI
 #if canImport(GoogleSignIn)
     import GoogleSignIn
 #endif
+#if canImport(SuperwallKit)
+    import SuperwallKit
+#endif
 
 // MARK: - IOSBoilerplateApp
 
@@ -23,6 +26,7 @@ struct IOSBoilerplateApp: App {
                 .withLocalizationManager()
                 .withAuthManager()
                 .withRevenueCatManager()
+                .withSuperwallManager()
                 .onAppear {
                     #if canImport(RevenueCat)
                         RevenueCatManager.shared.configure()
@@ -55,6 +59,11 @@ struct IOSBoilerplateApp: App {
                         }
 
                         GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: finalClientID)
+                    #endif
+
+                    #if canImport(SuperwallKit)
+                        // Configure Superwall
+                        SuperwallManager.shared.configure()
                     #endif
                 }
                 .onChange(of: scenePhase) { newPhase in
