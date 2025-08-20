@@ -81,6 +81,9 @@ public class SuperwallManager: NSObject, ObservableObject {
     // MARK: - Analytics Integration
     public weak var analyticsDelegate: PaywallAnalyticsDelegate?
 
+    // MARK: - RevenueCat Integration
+    public weak var revenueCatManager: RevenueCatManager?
+
     // MARK: - Initialization
     override private init() {
         // Load API key from Info.plist or use default
@@ -140,6 +143,7 @@ public class SuperwallManager: NSObject, ObservableObject {
             }
 
             Task {
+                // Register and present the paywall
                 Superwall.shared.register(placement: event.rawValue)
                 print("✅ Paywall event registered: \(event.displayName)")
                 lastError = nil
@@ -160,6 +164,7 @@ public class SuperwallManager: NSObject, ObservableObject {
             }
 
             Task {
+                // Register and present the paywall
                 Superwall.shared.register(placement: identifier)
                 print("✅ Custom paywall event registered: \(identifier)")
                 lastError = nil
@@ -178,6 +183,42 @@ public class SuperwallManager: NSObject, ObservableObject {
     /// Present paywall for locked feature
     public func presentFeaturePaywall(feature: PaywallEvent) {
         presentPaywall(event: feature)
+    }
+
+    /// Check if user has access to a premium feature
+    public func hasAccessToFeature(_: PaywallEvent) -> Bool {
+        guard let revenueCat = revenueCatManager else {
+            print("⚠️ RevenueCat manager not set")
+            return false
+        }
+
+        // Check if user has pro access
+        return revenueCat.isPro
+    }
+
+    /// Present paywall only if user doesn't have access
+    public func presentPaywallIfNeeded(for feature: PaywallEvent) {
+        if hasAccessToFeature(feature) {
+            print("✅ User already has access to \(feature.displayName)")
+            return
+        }
+
+        presentPaywall(event: feature)
+    }
+
+    /// Present paywall with RevenueCat entitlement check
+    public func presentPaywallWithEntitlementCheck(
+        for feature: PaywallEvent,
+        fallbackToPaywall: Bool = true
+    ) {
+        if hasAccessToFeature(feature) {
+            print("✅ User has access to \(feature.displayName)")
+            return
+        }
+
+        if fallbackToPaywall {
+            presentPaywall(event: feature)
+        }
     }
 
     // MARK: - Analytics Events

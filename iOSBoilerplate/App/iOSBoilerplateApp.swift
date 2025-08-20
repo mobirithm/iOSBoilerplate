@@ -64,6 +64,9 @@ struct IOSBoilerplateApp: App {
                     #if canImport(SuperwallKit)
                         // Configure Superwall
                         SuperwallManager.shared.configure()
+
+                        // Connect RevenueCat manager to Superwall
+                        SuperwallManager.shared.revenueCatManager = RevenueCatManager.shared
                     #endif
                 }
                 .onChange(of: scenePhase) { newPhase in

@@ -96,8 +96,8 @@ struct PaywallDemoView: View {
                         // Show analytics
                         showAnalyticsDemo()
                     } else {
-                        // Trigger paywall
-                        superwallManager.presentFeaturePaywall(feature: .featureLockedAnalytics)
+                        // Trigger paywall with entitlement check
+                        superwallManager.presentPaywallWithEntitlementCheck(for: .featureLockedAnalytics)
                     }
                 }
 
@@ -112,8 +112,8 @@ struct PaywallDemoView: View {
                         // Show notifications
                         showNotificationsDemo()
                     } else {
-                        // Trigger paywall
-                        superwallManager.presentFeaturePaywall(feature: .featureLockedNotifications)
+                        // Trigger paywall with entitlement check
+                        superwallManager.presentPaywallWithEntitlementCheck(for: .featureLockedNotifications)
                     }
                 }
 
@@ -128,8 +128,8 @@ struct PaywallDemoView: View {
                         // Show themes
                         showThemesDemo()
                     } else {
-                        // Trigger paywall
-                        superwallManager.presentFeaturePaywall(feature: .featureLockedThemes)
+                        // Trigger paywall with entitlement check
+                        superwallManager.presentPaywallWithEntitlementCheck(for: .featureLockedThemes)
                     }
                 }
             }
