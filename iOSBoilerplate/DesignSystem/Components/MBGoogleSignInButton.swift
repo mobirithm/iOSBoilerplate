@@ -19,7 +19,7 @@ struct MBGoogleSignInButton: View {
         Button(action: action) {
             HStack(spacing: DesignTokens.Spacing.sm) {
                 // Google Logo
-                Image(systemName: "globe")
+                Image(systemName: "g.circle.fill")
                     .font(.system(size: 18, weight: .medium))
                     .foregroundColor(DesignTokens.Colors.textPrimary)
 
