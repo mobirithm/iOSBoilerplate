@@ -173,6 +173,22 @@ struct ProfileView: View {
                             .font(DesignTokens.Typography.callout)
                             .foregroundColor(DesignTokens.Colors.textSecondary)
                     }
+
+                    Divider()
+
+                    // Auth Provider
+                    HStack {
+                        Text("auth.provider".localized)
+                            .font(DesignTokens.Typography.callout)
+                            .fontWeight(.medium)
+                            .foregroundColor(DesignTokens.Colors.textPrimary)
+
+                        Spacer()
+
+                        Text(authManager.currentUser?.authProvider.displayName ?? "Unknown")
+                            .font(DesignTokens.Typography.callout)
+                            .foregroundColor(DesignTokens.Colors.textSecondary)
+                    }
                 }
             }
         }

@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>REVENUECAT_API_KEY</key>
-	<string>appl_QRIJMRVTAtLCsbiUAFqaWRYkUxW</string>
-</dict>
+	<dict>
+		<key>REVENUECAT_API_KEY</key>
+		<string>appl_QRIJMRVTAtLCsbiUAFqaWRYkUxW</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>com.mobirithm.iOSBoilerplate</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.mobirithm.iOSBoilerplate</string>
+				</array>
+			</dict>
+			<dict>
+				<key>CFBundleURLName</key>
+				<string>Google Sign-In</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>com.googleusercontent.apps.222440005-gl3fl5tipjsa3jdk99ug5dabva3cvro7</string>
+				</array>
+			</dict>
+		</array>
+		<key>GIDClientID</key>
+		<string>222440005-gl3fl5tipjsa3jdk99ug5dabva3cvro7.apps.googleusercontent.com</string>
+	</dict>
 </plist>

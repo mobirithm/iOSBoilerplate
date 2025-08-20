@@ -102,3 +102,6 @@ iOSInjectionProject/
 
 # XcodeGen
 *.xcodeproj
+
+# Google Services
+GoogleService-Info.plist

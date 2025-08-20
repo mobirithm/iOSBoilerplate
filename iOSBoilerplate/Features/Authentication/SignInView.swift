@@ -7,6 +7,11 @@
 
 import AuthenticationServices
 import SwiftUI
+#if canImport(GoogleSignIn)
+    import GoogleSignIn
+#endif
+
+// MARK: - SignInView
 
 struct SignInView: View {
     @EnvironmentObject private var authManager: AuthManager
@@ -137,7 +142,8 @@ struct SignInView: View {
                                 id: userID,
                                 email: finalEmail,
                                 fullName: finalFullName,
-                                isEmailVerified: finalEmail != nil
+                                isEmailVerified: finalEmail != nil,
+                                authProvider: .apple
                             )
 
                             // Save to keychain and update state
@@ -199,6 +205,14 @@ struct SignInView: View {
             .frame(height: 50)
             .cornerRadius(DesignTokens.CornerRadius.button)
             .shadow(DesignTokens.Shadow.small)
+
+            // Sign in with Google Button
+            #if canImport(GoogleSignIn)
+                MBGoogleSignInButton {
+                    authManager.signInWithGoogle()
+                }
+                .shadow(DesignTokens.Shadow.small)
+            #endif
 
             // Guest Mode
             VStack(spacing: DesignTokens.Spacing.md) {

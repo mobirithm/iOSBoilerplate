@@ -36,6 +36,7 @@
 "auth.signIn" = "Sign In";
 "auth.signUp" = "Sign Up";
 "auth.signInWithApple" = "Sign in with Apple";
+"auth.signInWithGoogle" = "Sign in with Google";
 "auth.continueAsGuest" = "Continue as Guest";
 "auth.or" = "or";
 "auth.email" = "Email";
@@ -55,6 +56,7 @@
 "auth.accountActions" = "Account Actions";
 "auth.userID" = "User ID";
 "auth.fullName" = "Full Name";
+"auth.provider" = "Sign-in Provider";
 "auth.notProvided" = "Not Provided";
 "auth.user.anonymous" = "Anonymous User";
 "auth.signOut.confirm" = "Sign Out";

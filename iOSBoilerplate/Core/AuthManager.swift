@@ -8,6 +8,9 @@
 import AuthenticationServices
 import CryptoKit
 import SwiftUI
+#if canImport(GoogleSignIn)
+    import GoogleSignIn
+#endif
 
 // MARK: - User
 
@@ -16,12 +19,39 @@ public struct User: Codable, Equatable {
     public let email: String?
     public let fullName: String?
     public let isEmailVerified: Bool
+    public let authProvider: AuthProvider
 
-    public init(id: String, email: String?, fullName: String?, isEmailVerified: Bool = false) {
+    public init(
+        id: String,
+        email: String?,
+        fullName: String?,
+        isEmailVerified: Bool = false,
+        authProvider: AuthProvider = .apple
+    ) {
         self.id = id
         self.email = email
         self.fullName = fullName
         self.isEmailVerified = isEmailVerified
+        self.authProvider = authProvider
+    }
+}
+
+// MARK: - AuthProvider
+
+public enum AuthProvider: String, Codable, CaseIterable {
+    case apple
+    case google
+    case guest
+
+    public var displayName: String {
+        switch self {
+        case .apple:
+            return "Apple"
+        case .google:
+            return "Google"
+        case .guest:
+            return "Guest"
+        }
     }
 }
 
@@ -106,14 +136,31 @@ public class AuthManager: NSObject, ObservableObject {
             await MainActor.run {
                 do {
                     // Check if we have stored credentials
-                    let hasUserID = keychainManager.exists(for: KeychainManager.Keys.appleUserID)
+                    let hasAppleUserID = keychainManager.exists(for: KeychainManager.Keys.appleUserID)
+                    let hasGoogleUserID = keychainManager.exists(for: KeychainManager.Keys.googleUserID)
 
-                    if hasUserID {
-                        let userID = try keychainManager.loadString(for: KeychainManager.Keys.appleUserID)
+                    if hasAppleUserID || hasGoogleUserID {
+                        let userID: String
+                        let authProvider: AuthProvider
+
+                        if hasAppleUserID {
+                            userID = try keychainManager.loadString(for: KeychainManager.Keys.appleUserID)
+                            authProvider = .apple
+                        } else {
+                            userID = try keychainManager.loadString(for: KeychainManager.Keys.googleUserID)
+                            authProvider = .google
+                        }
+
                         let email = try? keychainManager.loadString(for: KeychainManager.Keys.userEmail)
                         let fullName = try? keychainManager.loadString(for: KeychainManager.Keys.userFullName)
 
-                        let user = User(id: userID, email: email, fullName: fullName, isEmailVerified: email != nil)
+                        let user = User(
+                            id: userID,
+                            email: email,
+                            fullName: fullName,
+                            isEmailVerified: email != nil,
+                            authProvider: authProvider
+                        )
                         setSignedInState(user: user)
                     } else {
                         setSignedOutState()
@@ -141,11 +188,68 @@ public class AuthManager: NSObject, ObservableObject {
         authorizationController.performRequests()
     }
 
+    /// Sign in with Google
+    public func signInWithGoogle() {
+        #if canImport(GoogleSignIn)
+            guard let presentingViewController = UIApplication.shared.windows.first?.rootViewController else {
+                setErrorState(error: .failed)
+                return
+            }
+
+            GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { [weak self] result, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self?.setErrorState(error: .unknown(error))
+                        return
+                    }
+
+                    guard let result = result else {
+                        self?.setErrorState(error: .failed)
+                        return
+                    }
+
+                    let user = result.user
+                    let profile = user.profile
+
+                    let googleUser = User(
+                        id: user.userID ?? UUID().uuidString,
+                        email: profile?.email,
+                        fullName: profile?.name,
+                        isEmailVerified: profile?.hasImage == true,
+                        // Google users with profile images are typically verified
+                        authProvider: .google
+                    )
+
+                    // Save to keychain
+                    self?.saveUserCredentials(
+                        userID: googleUser.id,
+                        email: googleUser.email,
+                        fullName: googleUser.fullName,
+                        idToken: user.accessToken.tokenString,
+                        authProvider: .google
+                    )
+
+                    // Update state
+                    self?.setSignedInState(user: googleUser)
+                }
+            }
+        #else
+            setErrorState(error: .failed)
+        #endif
+    }
+
     /// Sign out
     public func signOut() {
         Task {
             await MainActor.run {
                 do {
+                    // Sign out from Google if that was the provider
+                    if let currentUser = currentUser, currentUser.authProvider == .google {
+                        #if canImport(GoogleSignIn)
+                            GIDSignIn.sharedInstance.signOut()
+                        #endif
+                    }
+
                     // Clear keychain
                     try keychainManager.clearAll()
                     setSignedOutState()
@@ -190,9 +294,22 @@ public class AuthManager: NSObject, ObservableObject {
         authState = .error(error)
     }
 
-    private func saveUserCredentials(userID: String, email: String?, fullName: String?, idToken: String?) {
+    private func saveUserCredentials(
+        userID: String,
+        email: String?,
+        fullName: String?,
+        idToken: String?,
+        authProvider: AuthProvider = .apple
+    ) {
         do {
-            try keychainManager.save(string: userID, for: KeychainManager.Keys.appleUserID)
+            // Save user ID with provider prefix
+            let userIDKey = authProvider == .apple
+                ? KeychainManager.Keys.appleUserID
+                : KeychainManager.Keys.googleUserID
+            try keychainManager.save(string: userID, for: userIDKey)
+
+            // Save auth provider
+            try keychainManager.save(string: authProvider.rawValue, for: KeychainManager.Keys.authProvider)
 
             if let email = email {
                 try keychainManager.save(string: email, for: KeychainManager.Keys.userEmail)
@@ -203,7 +320,10 @@ public class AuthManager: NSObject, ObservableObject {
             }
 
             if let idToken = idToken {
-                try keychainManager.save(string: idToken, for: KeychainManager.Keys.appleIDToken)
+                let tokenKey = authProvider == .apple
+                    ? KeychainManager.Keys.appleIDToken
+                    : KeychainManager.Keys.googleIDToken
+                try keychainManager.save(string: idToken, for: tokenKey)
             }
         } catch {
             // Intentionally ignore; user state will still be updated
@@ -275,11 +395,18 @@ extension AuthManager: ASAuthorizationControllerDelegate {
                 id: userID,
                 email: email,
                 fullName: displayName.isEmpty ? nil : displayName,
-                isEmailVerified: email != nil
+                isEmailVerified: email != nil,
+                authProvider: .apple
             )
 
             // Save to keychain
-            saveUserCredentials(userID: userID, email: email, fullName: displayName, idToken: idToken)
+            saveUserCredentials(
+                userID: userID,
+                email: email,
+                fullName: displayName,
+                idToken: idToken,
+                authProvider: .apple
+            )
 
             // Update state
             setSignedInState(user: user)

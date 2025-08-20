@@ -36,6 +36,7 @@
 "auth.signIn" = "Giriş Yap";
 "auth.signUp" = "Kayıt Ol";
 "auth.signInWithApple" = "Apple ile Giriş Yap";
+"auth.signInWithGoogle" = "Google ile Giriş Yap";
 "auth.continueAsGuest" = "Misafir Olarak Devam Et";
 "auth.or" = "veya";
 "auth.email" = "E-posta";
@@ -55,6 +56,7 @@
 "auth.accountActions" = "Hesap İşlemleri";
 "auth.userID" = "Kullanıcı ID";
 "auth.fullName" = "Ad Soyad";
+"auth.provider" = "Giriş Sağlayıcısı";
 "auth.notProvided" = "Sağlanmamış";
 "auth.user.anonymous" = "Anonim Kullanıcı";
 "auth.signOut.confirm" = "Çıkış Yap";

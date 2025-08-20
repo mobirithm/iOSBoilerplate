@@ -160,6 +160,9 @@ public extension KeychainManager {
         public static let appleUserID = "apple_user_id"
         public static let appleIDToken = "apple_id_token"
         public static let appleAuthCode = "apple_auth_code"
+        public static let googleUserID = "google_user_id"
+        public static let googleIDToken = "google_id_token"
+        public static let authProvider = "auth_provider"
         public static let userEmail = "user_email"
         public static let userFullName = "user_full_name"
     }
