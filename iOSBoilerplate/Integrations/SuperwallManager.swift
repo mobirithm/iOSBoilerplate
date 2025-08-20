@@ -41,7 +41,7 @@ public enum PaywallEvent: String, CaseIterable {
 
 // MARK: - SuperwallError
 
-public enum SuperwallError: Error, LocalizedError {
+public enum SuperwallError: Error, LocalizedError, Equatable {
     case notConfigured
     case invalidAPIKey
     case eventRegistrationFailed(String)
@@ -110,23 +110,18 @@ public class SuperwallManager: NSObject, ObservableObject {
                 return
             }
 
-            do {
-                // Configure Superwall
-                Superwall.configure(apiKey: apiKey)
+            // Configure Superwall
+            Superwall.configure(apiKey: apiKey)
 
-                // Set delegate for analytics
-                Superwall.shared.delegate = self
+            // Set delegate for analytics
+            Superwall.shared.delegate = self
 
-                // Register paywall events
-                registerPaywallEvents()
+            // Register paywall events
+            registerPaywallEvents()
 
-                isConfigured = true
-                lastError = nil
-                print("✅ Superwall configured successfully with API key: \(String(apiKey.prefix(10)))...")
-            } catch {
-                lastError = .presentationFailed(error.localizedDescription)
-                print("❌ Superwall configuration failed: \(error)")
-            }
+            isConfigured = true
+            lastError = nil
+            print("✅ Superwall configured successfully with API key: \(String(apiKey.prefix(10)))...")
         #else
             lastError = .notConfigured
             print("⚠️ Superwall SDK not available")
@@ -145,15 +140,9 @@ public class SuperwallManager: NSObject, ObservableObject {
             }
 
             Task {
-                do {
-                    try await Superwall.shared.register(placement: event.rawValue)
-                    print("✅ Paywall event registered: \(event.displayName)")
-                    lastError = nil
-                } catch {
-                    let errorMsg = "Failed to register paywall event: \(event.displayName)"
-                    lastError = .eventRegistrationFailed(errorMsg)
-                    print("❌ \(errorMsg): \(error)")
-                }
+                Superwall.shared.register(placement: event.rawValue)
+                print("✅ Paywall event registered: \(event.displayName)")
+                lastError = nil
             }
         #else
             lastError = .notConfigured
@@ -171,15 +160,9 @@ public class SuperwallManager: NSObject, ObservableObject {
             }
 
             Task {
-                do {
-                    try await Superwall.shared.register(placement: identifier)
-                    print("✅ Custom paywall event registered: \(identifier)")
-                    lastError = nil
-                } catch {
-                    let errorMsg = "Failed to register custom event: \(identifier)"
-                    lastError = .eventRegistrationFailed(errorMsg)
-                    print("❌ \(errorMsg): \(error)")
-                }
+                Superwall.shared.register(placement: identifier)
+                print("✅ Custom paywall event registered: \(identifier)")
+                lastError = nil
             }
         #else
             lastError = .notConfigured
@@ -219,7 +202,9 @@ public class SuperwallManager: NSObject, ObservableObject {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                self?.isPaywallPresented = true
+                Task { @MainActor in
+                    self?.isPaywallPresented = true
+                }
             }
 
             // Listen for paywall dismissal events
@@ -228,7 +213,9 @@ public class SuperwallManager: NSObject, ObservableObject {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                self?.isPaywallPresented = false
+                Task { @MainActor in
+                    self?.isPaywallPresented = false
+                }
             }
         #endif
     }
@@ -247,46 +234,45 @@ public class SuperwallManager: NSObject, ObservableObject {
 
 #if canImport(SuperwallKit)
     extension SuperwallManager: SuperwallDelegate {
-        public func didDismissPaywall(withInfo info: PaywallInfo) {
-            isPaywallPresented = false
-            print("Paywall dismissed: \(info.placementId)")
+        public func didDismissPaywall(withInfo _: PaywallInfo) {
+            Task { @MainActor in
+                isPaywallPresented = false
+                print("Paywall dismissed")
 
-            // Emit analytics event
-            emitAnalyticsEvent("paywall_dismissed", properties: [
-                "paywall_id": info.placementId,
-                "paywall_name": info.placementId,
-            ])
+                // Emit analytics event
+                emitAnalyticsEvent("paywall_dismissed", properties: [
+                    "paywall_info": "dismissed",
+                ])
+            }
         }
 
-        public func didPresentPaywall(withInfo info: PaywallInfo) {
-            isPaywallPresented = true
-            print("Paywall presented: \(info.placementId)")
+        public func didPresentPaywall(withInfo _: PaywallInfo) {
+            Task { @MainActor in
+                isPaywallPresented = true
+                print("Paywall presented")
 
-            // Emit analytics event
-            emitAnalyticsEvent("paywall_presented", properties: [
-                "paywall_id": info.placementId,
-                "paywall_name": info.placementId,
-            ])
+                // Emit analytics event
+                emitAnalyticsEvent("paywall_presented", properties: [
+                    "paywall_info": "presented",
+                ])
+            }
         }
 
-        public func didPurchase(product: Product, withInfo info: PaywallInfo) {
-            print("Purchase completed: \(product.id) from paywall: \(info.placementId)")
+        public func didPurchase(product: Product, withInfo _: PaywallInfo) {
+            print("Purchase completed: \(product.id)")
 
             // Emit analytics event
             emitAnalyticsEvent("purchase_completed", properties: [
                 "product_id": product.id,
-                "paywall_id": info.placementId,
-                "price": product.price ?? 0.0,
             ])
         }
 
-        public func didFailToPurchase(product: Product, withInfo info: PaywallInfo, error: Error) {
-            print("Purchase failed: \(product.id) from paywall: \(info.placementId), error: \(error)")
+        public func didFailToPurchase(product: Product, withInfo _: PaywallInfo, error: Error) {
+            print("Purchase failed: \(product.id), error: \(error)")
 
             // Emit analytics event
             emitAnalyticsEvent("purchase_failed", properties: [
                 "product_id": product.id,
-                "paywall_id": info.placementId,
                 "error": error.localizedDescription,
             ])
         }

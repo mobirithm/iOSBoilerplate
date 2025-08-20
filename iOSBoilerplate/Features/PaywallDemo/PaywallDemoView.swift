@@ -149,8 +149,7 @@ struct PaywallDemoView: View {
                 MBButton(
                     title: "Simulate Onboarding Complete",
                     style: .primary,
-                    size: .large,
-                    icon: "checkmark.circle.fill"
+                    size: .large
                 ) {
                     superwallManager.presentOnboardingPaywall()
                 }
@@ -159,8 +158,7 @@ struct PaywallDemoView: View {
                 MBButton(
                     title: "Trigger Feature Locked Paywall",
                     style: .secondary,
-                    size: .large,
-                    icon: "lock.fill"
+                    size: .large
                 ) {
                     superwallManager.presentFeaturePaywall(feature: .featureLockedPremium)
                 }
@@ -169,8 +167,7 @@ struct PaywallDemoView: View {
                 MBButton(
                     title: "Custom Paywall Event",
                     style: .tertiary,
-                    size: .large,
-                    icon: "bolt.fill"
+                    size: .large
                 ) {
                     superwallManager.presentPaywall(event: .customDemo)
                 }
@@ -253,6 +250,7 @@ struct PaywallDemoView: View {
             title: title,
             subtitle: description,
             style: .plain,
+            action: action,
             leading: {
                 Image(systemName: icon)
                     .font(.title2)
@@ -267,9 +265,7 @@ struct PaywallDemoView: View {
                         .foregroundColor(DesignTokens.Colors.success)
                 }
             }
-        ) {
-            action()
-        }
+        )
     }
 
     private func showAnalyticsDemo() {
