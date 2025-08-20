@@ -146,7 +146,7 @@ public class SuperwallManager: NSObject, ObservableObject {
 
             Task {
                 do {
-                    try await Superwall.shared.register(event: event.rawValue)
+                    try await Superwall.shared.register(placement: event.rawValue)
                     print("✅ Paywall event registered: \(event.displayName)")
                     lastError = nil
                 } catch {
@@ -172,7 +172,7 @@ public class SuperwallManager: NSObject, ObservableObject {
 
             Task {
                 do {
-                    try await Superwall.shared.register(event: identifier)
+                    try await Superwall.shared.register(placement: identifier)
                     print("✅ Custom paywall event registered: \(identifier)")
                     lastError = nil
                 } catch {
@@ -203,7 +203,7 @@ public class SuperwallManager: NSObject, ObservableObject {
         #if canImport(SuperwallKit)
             // Register all predefined events
             for event in PaywallEvent.allCases {
-                Superwall.shared.register(event: event.rawValue)
+                Superwall.shared.register(placement: event.rawValue)
             }
             print("✅ Registered \(PaywallEvent.allCases.count) paywall events")
         #endif
@@ -215,7 +215,7 @@ public class SuperwallManager: NSObject, ObservableObject {
         #if canImport(SuperwallKit)
             // Listen for paywall presentation events
             paywallPresentedObserver = NotificationCenter.default.addObserver(
-                forName: .paywallPresented,
+                forName: NSNotification.Name("SuperwallPaywallPresented"),
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
@@ -224,7 +224,7 @@ public class SuperwallManager: NSObject, ObservableObject {
 
             // Listen for paywall dismissal events
             paywallDismissedObserver = NotificationCenter.default.addObserver(
-                forName: .paywallDismissed,
+                forName: NSNotification.Name("SuperwallPaywallDismissed"),
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
@@ -249,44 +249,44 @@ public class SuperwallManager: NSObject, ObservableObject {
     extension SuperwallManager: SuperwallDelegate {
         public func didDismissPaywall(withInfo info: PaywallInfo) {
             isPaywallPresented = false
-            print("Paywall dismissed: \(info.id)")
+            print("Paywall dismissed: \(info.placementId)")
 
             // Emit analytics event
             emitAnalyticsEvent("paywall_dismissed", properties: [
-                "paywall_id": info.id,
-                "paywall_name": info.name ?? "unknown",
+                "paywall_id": info.placementId,
+                "paywall_name": info.placementId,
             ])
         }
 
         public func didPresentPaywall(withInfo info: PaywallInfo) {
             isPaywallPresented = true
-            print("Paywall presented: \(info.id)")
+            print("Paywall presented: \(info.placementId)")
 
             // Emit analytics event
             emitAnalyticsEvent("paywall_presented", properties: [
-                "paywall_id": info.id,
-                "paywall_name": info.name ?? "unknown",
+                "paywall_id": info.placementId,
+                "paywall_name": info.placementId,
             ])
         }
 
         public func didPurchase(product: Product, withInfo info: PaywallInfo) {
-            print("Purchase completed: \(product.id) from paywall: \(info.id)")
+            print("Purchase completed: \(product.id) from paywall: \(info.placementId)")
 
             // Emit analytics event
             emitAnalyticsEvent("purchase_completed", properties: [
                 "product_id": product.id,
-                "paywall_id": info.id,
-                "price": product.price,
+                "paywall_id": info.placementId,
+                "price": product.price ?? 0.0,
             ])
         }
 
         public func didFailToPurchase(product: Product, withInfo info: PaywallInfo, error: Error) {
-            print("Purchase failed: \(product.id) from paywall: \(info.id), error: \(error)")
+            print("Purchase failed: \(product.id) from paywall: \(info.placementId), error: \(error)")
 
             // Emit analytics event
             emitAnalyticsEvent("purchase_failed", properties: [
                 "product_id": product.id,
-                "paywall_id": info.id,
+                "paywall_id": info.placementId,
                 "error": error.localizedDescription,
             ])
         }
